@@ -1,0 +1,339 @@
+DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Performance Evaluator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <style>
+        /* Dark Theme Styling (CSS) */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #1a1a2e; 
+            color: #e0e0e0; 
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #0f0f1c; 
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); 
+        }
+        h1 {
+            text-align: center;
+            color: #00bcd4; 
+            margin-bottom: 30px;
+        }
+
+        /* Student Details Styling */
+        .details-section {
+            border: 1px solid #005f73; 
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 6px;
+            background-color: #0c2c4d; 
+        }
+        .details-section h2 {
+            color: #00bcd4; 
+            margin-top: 0;
+            border-bottom: 1px dashed #005f73; 
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .details-input {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .details-input label {
+            flex: 1;
+            font-weight: bold;
+            min-width: 120px;
+            color: #c0c0c0; 
+        }
+        .details-input input[type="text"] {
+            flex: 3;
+            padding: 8px;
+            border: 1px solid #005f73; 
+            border-radius: 4px;
+            background-color: #1a1a2e; 
+            color: #e0e0e0; 
+        }
+        
+        /* Subject Input Styling */
+        .subject-entry {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px; /* Space between subject name input and marks input */
+        }
+        .subject-entry input[type="text"] {
+            flex: 2; /* Takes up more space for the name */
+            padding: 8px;
+            border: 1px solid #005f73;
+            border-radius: 4px;
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+        }
+        .subject-entry input[type="number"] {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #005f73; 
+            border-radius: 4px;
+            background-color: #1a1a2e; 
+            color: #e0e0e0; 
+            text-align: center;
+        }
+        .subject-entry span {
+            font-weight: bold;
+            color: #c0c0c0; 
+        }
+
+        /* Button and Results Styling (Unchanged from previous dark theme) */
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px; 
+            background-color: #00bcd4; 
+            color: #0f0f1c; 
+            border: none;
+            border-radius: 5px;
+            font-size: 17px; 
+            cursor: pointer;
+            margin-top: 25px; 
+            transition: background-color 0.3s ease; 
+        }
+        button:hover {
+            background-color: #008ba3; 
+        }
+
+        .results {
+            margin-top: 35px; 
+            padding-top: 25px;
+            border-top: 2px solid #005f73; 
+        }
+        .results h2 {
+            color: #00bcd4; 
+            margin-bottom: 15px;
+        }
+        .results p {
+            font-size: 1.15em; 
+            margin: 8px 0;
+        }
+        .results strong {
+            color: #ffeb3b; 
+        }
+        #chartContainer {
+            margin-top: 30px;
+            height: 300px; 
+        }
+        hr {
+            border-color: #005f73; 
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Academic Performance Evaluator 🎓</h1>
+
+        <form id="evaluationForm">
+            
+            <div class="details-section">
+                <h2>Student Details 📝</h2>
+                <div class="details-input">
+                    <label for="studentName">Name:</label>
+                    <input type="text" id="studentName" placeholder="Enter Full Name" required>
+                </div>
+                <div class="details-input">
+                    <label for="rollNumber">Roll Number:</label>
+                    <input type="text" id="rollNumber" placeholder="Enter Roll Number" required>
+                </div>
+                <div class="details-input">
+                    <label for="studentClass">Class/Grade:</label>
+                    <input type="text" id="studentClass" placeholder="e.g., 10th A" required>
+                </div>
+            </div>
+
+            <div class="marks-section">
+                <h2>Subject Marks (Max 100 per Subject)</h2>
+                <div class="subject-entry">
+                    <input type="text" class="subject-name" placeholder="Subject Name 1" required>
+                    <input type="number" class="subject-score" min="0" max="100" value="0" required>
+                    <span>/ 100</span>
+                </div>
+                <div class="subject-entry">
+                    <input type="text" class="subject-name" placeholder="Subject Name 2" required>
+                    <input type="number" class="subject-score" min="0" max="100" value="0" required>
+                    <span>/ 100</span>
+                </div>
+                <div class="subject-entry">
+                    <input type="text" class="subject-name" placeholder="Subject Name 3" required>
+                    <input type="number" class="subject-score" min="0" max="100" value="0" required>
+                    <span>/ 100</span>
+                </div>
+                <div class="subject-entry">
+                    <input type="text" class="subject-name" placeholder="Subject Name 4" required>
+                    <input type="number" class="subject-score" min="0" max="100" value="0" required>
+                    <span>/ 100</span>
+                </div>
+                <div class="subject-entry">
+                    <input type="text" class="subject-name" placeholder="Subject Name 5" required>
+                    <input type="number" class="subject-score" min="0" max="100" value="0" required>
+                    <span>/ 100</span>
+                </div>
+                
+                <div id="extraSubjects"></div> 
+            </div>
+
+
+            <button type="button" onclick="calculatePerformance()">Calculate & Visualize</button>
+        </form>
+
+        <div class="results" id="results">
+            <h2>Results for <span id="displayStudentName">Student</span></h2>
+            <p><strong>Roll No:</strong> <span id="displayRollNumber">N/A</span> | <strong>Class:</strong> <span id="displayStudentClass">N/A</span></p>
+            <hr>
+            <p>Total Marks Scored: <strong id="totalMarks">0</strong> / <span id="totalMax">500</span></p>
+            <p>Overall Percentage: <strong id="percentage">0.00%</strong></p>
+        </div>
+
+        <div id="chartContainer">
+            <h3>Subject-wise Performance (Pie Chart)</h3>
+            <canvas id="performanceChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for Calculation and Chart Generation
+        const maxScorePerSubject = 100;
+        let chartInstance = null; 
+
+        function calculatePerformance() {
+            // 1. Get Student Details
+            const studentName = document.getElementById('studentName').value.trim();
+            const rollNumber = document.getElementById('rollNumber').value.trim();
+            const studentClass = document.getElementById('studentClass').value.trim();
+
+            if (!studentName || !rollNumber || !studentClass) {
+                alert("Please fill in all Student Details before calculating the performance.");
+                return;
+            }
+
+            // 2. Get Marks and Names dynamically
+            const subjectNames = document.querySelectorAll('.subject-name');
+            const subjectScores = document.querySelectorAll('.subject-score');
+            
+            const marks = {};
+            let totalMarksScored = 0;
+            let subjectCount = 0;
+
+            for (let i = 0; i < subjectNames.length; i++) {
+                const nameInput = subjectNames[i].value.trim();
+                const scoreValue = parseInt(subjectScores[i].value);
+                
+                // Only process entries where a name has been provided
+                if (nameInput) {
+                    subjectCount++;
+                    
+                    // Input validation
+                    if (scoreValue < 0 || scoreValue > maxScorePerSubject || isNaN(scoreValue)) {
+                        alert(`Please ensure the score for "${nameInput}" is between 0 and 100.`);
+                        return;
+                    }
+                    
+                    marks[nameInput] = scoreValue;
+                    totalMarksScored += scoreValue;
+                }
+            }
+            
+            if (subjectCount === 0) {
+                 alert("Please enter at least one subject name and score.");
+                 return;
+            }
+
+            // 3. Calculate Total Max Marks and Percentage
+            const totalMaxMarks = subjectCount * maxScorePerSubject;
+            const percentage = (totalMarksScored / totalMaxMarks) * 100;
+
+            // 4. Display Student Details and Results
+            document.getElementById('displayStudentName').textContent = studentName;
+            document.getElementById('displayRollNumber').textContent = rollNumber;
+            document.getElementById('displayStudentClass').textContent = studentClass;
+            
+            document.getElementById('totalMax').textContent = totalMaxMarks;
+            document.getElementById('totalMarks').textContent = totalMarksScored;
+            document.getElementById('percentage').textContent = percentage.toFixed(2) + '%';
+            
+            // 5. Generate/Update Pie Chart
+            updateChart(marks);
+        }
+
+        function updateChart(marks) {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            const subjectLabels = Object.keys(marks);
+            const subjectScores = Object.values(marks);
+
+            // A consistent palette for the dark theme
+            const colors = [
+                '#FF6384', '#36A2EB', '#FFCE56', '#00bcd4', '#9966FF', 
+                '#FF9F40', '#4BC0C0', '#C9CBCE' 
+            ];
+            
+            // Adjust colors based on the number of subjects
+            const backgroundColors = subjectScores.map((score, index) => colors[index % colors.length]);
+
+
+            chartInstance = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: subjectLabels,
+                    datasets: [{
+                        data: subjectScores,
+                        backgroundColor: backgroundColors,
+                        hoverOffset: 8, 
+                        hoverBackgroundColor: backgroundColors
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#e0e0e0' 
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Subject Score Distribution',
+                            color: '#00bcd4' 
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem, data) {
+                                    const label = data.labels[tooltipItem.index];
+                                    const value = data.datasets[0].data[tooltipItem.index];
+                                    return `${label}: ${value} marks`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize with default calculation on load 
+        document.addEventListener('DOMContentLoaded', () => {
+             calculatePerformance(); 
+        });
+    </script>
+</body>
+</html>
